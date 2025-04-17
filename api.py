@@ -24,7 +24,8 @@ def get_audio_url(video_url):
     ydl_opts = {
         'format': 'bestaudio/best',
         'quiet': True,
-        'noplaylist': True
+        'noplaylist': True,
+        'cookiesfrombrowser': ('chrome',),
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(video_url, download=False)
