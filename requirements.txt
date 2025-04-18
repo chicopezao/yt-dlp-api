@@ -2,3 +2,7 @@ Flask
 yt-dlp
 requests
 logging
+aiohttp
+aiofiles
+gunicorn
+hypercorn
