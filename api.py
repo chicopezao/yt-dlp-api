@@ -47,69 +47,111 @@ def get_video_url(video_url):
 # Rota /play — pesquisa e baixa áudio
 @app.route('/play')
 def play():
-    name = request.args.get('name')
-    if not name:
-        return jsonify({'error': 'Parâmetro "name" é obrigatório.'}), 400
+name = request.args.get('name')
+if not name:
+return jsonify({'error': 'Parâmetro "name" é obrigatório.'}), 400
 
-    videos = search_youtube(name)
-    if not videos:
-        return jsonify({'error': 'Nenhum vídeo encontrado.'}), 404
+videos = search_youtube(name)  
+if not videos:  
+    return jsonify({'error': 'Nenhum vídeo encontrado.'}), 404  
 
-    video_url = videos[0]['link']
-    try:
-        audio_url = get_audio_url(video_url)
-        print(f"Redirecionando para {audio_url}")
-        return redirect(audio_url)
-    except Exception as e:
-        print(f"Erro ao processar áudio: {e}")
-        return jsonify({'error': 'Erro ao baixar o áudio.', 'details': str(e)}), 500
-# Rota /playvideo — pesquisa e baixa vídeo
+video_url = videos[0]['link']  
+print(f"Link do vídeo encontrado: {video_url}")  
+
+try:  
+    audio_url = get_audio_url(video_url)  
+    response = requests.get(audio_url, stream=True)  
+
+    print("Enviando áudio para download...")  
+    return Response(  
+        response.iter_content(chunk_size=4096),  
+        mimetype="audio/mpeg",  
+        headers={  
+            "Content-Disposition": f'attachment; filename="{name}.mp3"'  
+        }  
+    )  
+except Exception as e:  
+    print(f"Erro ao processar áudio: {e}")  
+    return jsonify({'error': 'Erro ao baixar o áudio.', 'details': str(e)}), 500
+
+#Rota /playvideo — pesquisa e baixa vídeo
+
 @app.route('/playvideo')
 def playvideo():
-    name = request.args.get('name')
-    if not name:
-        return jsonify({'error': 'Parâmetro "name" é obrigatório.'}), 400
+name = request.args.get('name')
+if not name:
+return jsonify({'error': 'Parâmetro "name" é obrigatório.'}), 400
 
-    videos = search_youtube(name)
-    if not videos:
-        return jsonify({'error': 'Nenhum vídeo encontrado.'}), 404
+videos = search_youtube(name)  
+if not videos:  
+    return jsonify({'error': 'Nenhum vídeo encontrado.'}), 404  
 
-    video_url = videos[0]['link']
-    try:
-        video_stream_url = get_video_url(video_url)
-        print(f"Redirecionando para {video_stream_url}")
-        return redirect(video_stream_url)
-    except Exception as e:
-        print(f"Erro ao processar vídeo: {e}")
-        return jsonify({'error': 'Erro ao baixar o vídeo.', 'details': str(e)}), 500
-# Rota /playlink — baixa áudio a partir de URL
+video_url = videos[0]['link']  
+print(f"Link do vídeo encontrado: {video_url}")  
+
+try:  
+    video_stream_url = get_video_url(video_url)  
+    response = requests.get(video_stream_url, stream=True)  
+
+    print("Enviando vídeo para download...")  
+    return Response(  
+        response.iter_content(chunk_size=4096),  
+        mimetype="video/mp4",  
+        headers={  
+            "Content-Disposition": f'attachment; filename="{name}.mp4"'  
+        }  
+    )  
+except Exception as e:  
+    print(f"Erro ao processar vídeo: {e}")  
+    return jsonify({'error': 'Erro ao baixar o vídeo.', 'details': str(e)}), 500
+
+#Rota /playlink — baixa áudio a partir de URL
+
 @app.route('/playlink')
 def playlink():
-    url = request.args.get('url')
-    if not url:
-        return jsonify({'error': 'Parâmetro "url" é obrigatório.'}), 400
+url = request.args.get('url')
+if not url:
+return jsonify({'error': 'Parâmetro "url" é obrigatório.'}), 400
 
-    try:
-        audio_url = get_audio_url(url)
-        print(f"Redirecionando para {audio_url}")
-        return redirect(audio_url)
-    except Exception as e:
-        print(f"Erro ao processar áudio (link): {e}")
-        return jsonify({'error': 'Erro ao baixar o áudio.', 'details': str(e)}), 500
-# Rota /videolink — baixa vídeo a partir de URL
+try:  
+    audio_url = get_audio_url(url)  
+    response = requests.get(audio_url, stream=True)  
+
+    print("Enviando áudio direto para download (link)...")  
+    return Response(  
+        response.iter_content(chunk_size=4096),  
+        mimetype="audio/mpeg",  
+        headers={  
+            "Content-Disposition": 'attachment; filename="audio.mp3"'  
+        }  
+    )  
+except Exception as e:  
+    print(f"Erro ao processar áudio (link): {e}")  
+    return jsonify({'error': 'Erro ao baixar o áudio.', 'details': str(e)}), 500
+
+#Rota /videolink — baixa vídeo a partir de URL
+
 @app.route('/videolink')
 def videolink():
-    url = request.args.get('url')
-    if not url:
-        return jsonify({'error': 'Parâmetro "url" é obrigatório.'}), 400
+url = request.args.get('url')
+if not url:
+return jsonify({'error': 'Parâmetro "url" é obrigatório.'}), 400
 
-    try:
-        video_stream_url = get_video_url(url)
-        print(f"Redirecionando para {video_stream_url}")
-        return redirect(video_stream_url)
-    except Exception as e:
-        print(f"Erro ao processar vídeo (link): {e}")
-        return jsonify({'error': 'Erro ao baixar o vídeo.', 'details': str(e)}), 500
+try:  
+    video_stream_url = get_video_url(url)  
+    response = requests.get(video_stream_url, stream=True)  
+
+    print("Enviando vídeo direto para download (link)...")  
+    return Response(  
+        response.iter_content(chunk_size=4096),  
+        mimetype="video/mp4",  
+        headers={  
+            "Content-Disposition": 'attachment; filename="video.mp4"'  
+        }  
+    )  
+except Exception as e:  
+    print(f"Erro ao processar vídeo (link): {e}")  
+    return jsonify({'error': 'Erro ao baixar o vídeo.', 'details': str(e)}), 500
 # Iniciar servidor
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)
