@@ -1,3 +1,4 @@
+import yt_dlp
 from flask import Flask, request, jsonify, Response, redirect
 import requests
 app = Flask(__name__)
