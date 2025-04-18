@@ -65,7 +65,7 @@ def play():
 
         print("Enviando áudio para download...")
         return Response(
-            response.iter_content(chunk_size=4096),
+            response.iter_content(chunk_size=524288),
             mimetype="audio/mpeg",
             headers={
                 "Content-Disposition": f'attachment; filename="{name}.mp3"'
@@ -95,7 +95,7 @@ def playvideo():
 
         print("Enviando vídeo para download...")
         return Response(
-            response.iter_content(chunk_size=4096),
+            response.iter_content(chunk_size=524288),
             mimetype="video/mp4",
             headers={
                 "Content-Disposition": f'attachment; filename="{name}.mp4"'
@@ -118,7 +118,7 @@ def playlink():
 
         print("Enviando áudio direto para download (link)...")
         return Response(
-            response.iter_content(chunk_size=4096),
+            response.iter_content(chunk_size=524288),
             mimetype="audio/mpeg",
             headers={
                 "Content-Disposition": 'attachment; filename="audio.mp3"'
@@ -141,7 +141,7 @@ def videolink():
 
         print("Enviando vídeo direto para download (link)...")
         return Response(
-            response.iter_content(chunk_size=4096),
+            response.iter_content(chunk_size=524288),
             mimetype="video/mp4",
             headers={
                 "Content-Disposition": 'attachment; filename="video.mp4"'
