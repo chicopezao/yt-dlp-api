@@ -1,7 +1,5 @@
+from flask import Flask, request, jsonify, Response, redirect
 import requests
-import yt_dlp
-from flask import Flask, request, Response, jsonify
-
 app = Flask(__name__)
 
 # Pesquisa usando API World Ecletix
